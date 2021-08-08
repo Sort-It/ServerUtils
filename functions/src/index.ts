@@ -11,9 +11,10 @@ import * as functions from "firebase-functions";
 const  express = require("express");
 const  cors = require("cors");
 import { sendOtp } from "./sendOtptoClient";
+import { notifyExpert } from "./notifyExpertConsultation";
 
 const app = express();
 app.use(cors({origin: true }));
 app.use(sendOtp);
-
+app.use(notifyExpert);
 exports.serverutility = functions.https.onRequest(app);
