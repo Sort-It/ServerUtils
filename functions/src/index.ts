@@ -12,9 +12,13 @@ const  express = require("express");
 const  cors = require("cors");
 import { sendOtp } from "./sendOtptoClient";
 import { notifyExpert } from "./notifyExpertConsultation";
+import { clientNotification } from "./notifyClientonAccept";
+import { paymentNotification } from "./sucessfulPaymentNotification";
 
 const app = express();
 app.use(cors({origin: true }));
 app.use(sendOtp);
 app.use(notifyExpert);
+app.use(clientNotification);
+app.use(paymentNotification);
 exports.serverutility = functions.https.onRequest(app);
