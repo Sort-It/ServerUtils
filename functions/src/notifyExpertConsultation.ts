@@ -48,14 +48,13 @@ router.get('/notifyExpertforNewConsultation?:expertId', async (req: any , res: a
 
         console.log(latestToken);   
 
-        var Notificationtitle = 'New Request to join Package'+packageName;
+        var Notificationtitle = 'New Request to join Package '+packageName;
         var Notificationbody = clientName+ ' is requesting to join '+packageName +' Consulation Package';
-        var click_Action = "sample action";
         
-        var response = await notificationService.sendNotification(latestToken,Notificationtitle,Notificationbody,click_Action);
-        console.log(response.data);
-        if(response.data.failure === 1){
-            return res.status(111).json("Error Sending the Notifcation: Debug Info"+response.data.results);
+        var response = await notificationService.sendNotification(latestToken,Notificationtitle,Notificationbody,"sortitpro_importance_channel");
+        console.log(response);
+        if (!(response)) {
+            return res.status(111).json("Error Sending the Notifcation: Debug Info" + response.data.results);
         }
 
         return res.status(200).json("Success");
@@ -108,14 +107,13 @@ router.get('/notifyExpertforNewClass?:expertId', async (req: any , res: any ) =>
 
         console.log(latestToken);   
 
-        var Notificationtitle = 'New Request to join the Class'+className;
+        var Notificationtitle = 'New Request to join the Class '+className;
         var Notificationbody = clientName+ ' is requesting to join '+className +' Classroom';
-        var click_Action = "sample action";
         
-        var response = await notificationService.sendNotification(latestToken,Notificationtitle,Notificationbody,click_Action);
-        console.log(response.data);
-        if(response.data.failure === 1){
-            return res.status(111).json("Error Sending the Notifcation: Debug Info"+response.data.results);
+        var response = await notificationService.sendNotification(latestToken,Notificationtitle,Notificationbody,"sortitpro_importance_channel");
+        console.log(response);
+        if (!(response)) {
+            return res.status(111).json("Error Sending the Notifcation: Debug Info" + response.data.results);
         }
 
         return res.status(200).json("Success");

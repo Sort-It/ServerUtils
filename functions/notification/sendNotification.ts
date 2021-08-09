@@ -1,31 +1,30 @@
 const axios = require('axios');
+const firebase = require('../firebase/firebase.ts');
+var serviceAccount = require('../firebase/serviceAccountKey.json');
+let admin = firebase.admin;
 
-var sendNotification = function(fcmId,title,body,click_action){
+var sendNotification = function(fcmId,title,body,channelID){
 
-    var url = 'https://fcm.googleapis.com/fcm/send';
-    var serverKey ='AAAA48lDk14:APA91bFr3AB7Zbp9zUxdGK0_0tIpftHw0cgT-Cl92zmiOy64OWiUX9fwNQZ5MF0tSf5YNy8zzT5HRQ3sBRq1VCx78dp9WZJRpCokqGuEiUwLjD5jF7h2mvh3XoIFme1gR2NHlOPdEhBR';
-
-    var headers ={
-        "Authorization": 'key='+serverKey,
-        "Content-Type": 'application/json'
-    };
-
-    var reqbody = {
-        "to":fcmId,
-        "data":{
+    var message = {
+        "token":fcmId,
+        "android":{
+            "notification":{
+                "channelId":channelID,
+                "clickAction":"FLUTTER_NOTIFICATION_CLICK"
+            }
+        },
+        "notification":{
             "title":title,
             "body":body,
-            "click_action":click_action
         }
     };
 
-    return axios.post(url,reqbody,{
-        headers:headers
-    });
+    return admin.messaging().send(message);    
 };
-// sendNotification('d0KlrbmcSh-wmRtJ09IF2H:APA91bG5U5AK5lVzHQwXWH44rJYD56SlhWAm54VJaKkoSGPQkwuPMSG7xkrRWe8E4zfy5qKBlHrLku5ego1Oo9e7kZ6B2UyYTVkoXcaJC2OUuIbcbr9RlA5h9ltH_YMOP3sOpOtoqMAr'
-// , 'Testing 102','This is me testing notification LOL','I choose you pikachu click action').then(function(resp){
+// sendNotification('czsJwAMyR5alhtgMNGtk7-:APA91bEdBojCgRtXBGI32e_2cyximOG12E2pjjYualfAKwfgWBeKvIpK-dTkQNKEew5sPrB95oPURIvr3mPakAdXolfbrcW2BRMW0h7U6ZRZHFDk_wg0QZsNv1gwt_WQt7wu4Gu2c4kS'
+// , 'Testing 103','This is me testing notification LOL','sortitpro_importance_channel').then(function(resp){
 //     console.log(resp.data);
 // });
+// sortit_importance_channel
 
 exports.sendNotification = sendNotification;
