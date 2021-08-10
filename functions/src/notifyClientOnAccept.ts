@@ -25,7 +25,8 @@ router.get('/notifyClientForNewEnrollment?:expertId?:type', async (req: any , re
         var  clientName ;
         var joinedEventName;
 
-        if(type ===0 ){
+
+        if(type ==='0' ){
 
             var acceptedConsultationsArray = clientDataAssociatedtoExpert.data().acceptedClients;
             var latestAcceptedConsultation = acceptedConsultationsArray[acceptedConsultationsArray.length-1];
@@ -35,11 +36,11 @@ router.get('/notifyClientForNewEnrollment?:expertId?:type', async (req: any , re
 
         }
         else{
-            var acceptedConsultationsArray = clientDataAssociatedtoExpert.data().acceptedConsultations;            ;
+            var acceptedConsultationsArray = clientDataAssociatedtoExpert.data().acceptedConsultations;            
             var latestAcceptedConsultation = acceptedConsultationsArray[acceptedConsultationsArray.length-1];
             clientId = latestAcceptedConsultation.clientId;
             clientName = latestAcceptedConsultation.clientName;
-            joinedEventName = latestAcceptedConsultation.className;
+            joinedEventName = latestAcceptedConsultation.packageName;
         }
        
 
@@ -67,7 +68,7 @@ router.get('/notifyClientForNewEnrollment?:expertId?:type', async (req: any , re
         // send Notification to client for his accepted class
 
         var Notificationtitle = "Request to join Class/Package Approved" ;
-        var Notificationbody = "Your Request to join " + (type===0?"Class":"Package")+ ' : '+joinedEventName +" is approved";
+        var Notificationbody = "Your Request to join " + (type==='0'?"Class":"Package")+ ' : '+joinedEventName +" is approved";
         var response = await notificationService.sendNotification(currentToken,Notificationtitle,Notificationbody,"sortit_importance_channel");
         
         console.log(response);
