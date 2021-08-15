@@ -82,4 +82,66 @@ router.get('/notifyClientForNewEnrollment?:expertId?:type', async (req: any , re
     }catch (error) { return res.status(501).json(error.message); }
 });
 
+
+router.get('/notifyClientWhenClassisLive?:classId', async (req: any , res: any ) => {
+
+    try{
+        var classId = req.query.classId;
+        console.log(classId);
+
+        var pathForClass = '/classrooms/'+classId+'/members/';
+        var docName = 'data';
+
+        var classDataRef = await db.collection(pathForClass).doc(docName).get();
+
+        if(!(classDataRef)){
+            return res.status(501).json("Unable to find the class");
+        }
+
+        var classData = classDataRef.data();
+        var clientIdArray = [];
+
+        var pathforClassMetaData = '/classrooms/';
+        var classMetaDataREf = await db.collection(pathforClassMetaData).doc(classId).get();
+        var classMetaData = classMetaDataREf.data();
+
+        var n = classData.enrolledMembers.length;
+        if(n==0){
+            return res.status(501).json("No clients enrolled for the class");
+        }
+
+        for(let ind =0;ind<n;ind++){
+            var member = classData.enrolledMembers[ind];
+            console.log(member);
+            clientIdArray.push(member["uid"]);
+        }
+       
+        //Fetch tokenId of each of the client and ens notify to them all
+
+        for(let ind = 0;ind<n;ind++){
+
+            var clientId = clientIdArray[ind];
+
+            var clientPath = '/users/'+clientId+'/user_data/data/private/';
+            var clientDocName = "token";
+
+            var clientDataRef = await db.collection(clientPath).doc(clientDocName).get();
+            var clientData = clientDataRef.data();
+
+            var deviceTokenArray = clientData.token;
+            var currentDeviceToken = deviceTokenArray[deviceTokenArray.length-1];
+
+            var Notificationtitle = "Enrolled Classroom "+ classMetaData.name+ " is Live";
+            var Notificationbody = "Enrolled Class : "+classMetaData.name + " by Expert : "+classMetaData.coachName+ " is currently live" ;
+            var response = await notificationService.sendNotification(currentDeviceToken,Notificationtitle,Notificationbody,"sortit_importance_channel");
+            console.log(response);
+        }
+
+              
+        return res.status(200).json("Success");
+
+    }catch (error) { return res.status(501).json(error.message); }
+});
+
+
 export {router as clientNotification};
