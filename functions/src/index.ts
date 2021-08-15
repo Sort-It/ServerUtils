@@ -15,6 +15,8 @@ import { sendOtp } from "./sendOtptoClient";
 import { notifyExpert } from "./notifyExpertConsultation";
 import { clientNotification } from "./notifyClientonAccept";
 import { paymentNotification } from "./sucessfulPaymentNotification";
+import { rejectRequest } from "./rejectRequestApi";
+import { removeClient } from "./removeEnrolledClient";
 
 let admin = firebase.admin;
 const app = express();
@@ -40,7 +42,7 @@ const validateFirebaseIdToken = async (req: any, res: any, next: any) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
     functions.logger.log('Found "Authorization" header');
     // Read the ID Token from the Authorization header.
-    idToken = req.headers.authorization.split('Bearer')[1];
+    idToken = req.headers.authorization.split('Bearer ')[1];
     console.log(idToken);
   } else {
       // No Bearer Token
@@ -68,4 +70,6 @@ app.use(sendOtp);
 app.use(notifyExpert);
 app.use(clientNotification);
 app.use(paymentNotification);
+app.use(rejectRequest);
+app.use(removeClient);
 exports.serverutility = functions.https.onRequest(app);
