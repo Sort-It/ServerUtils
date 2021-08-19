@@ -51,7 +51,13 @@ router.get('/notifyExpertforNewConsultation?:expertId', async (req: any , res: a
         var Notificationtitle = 'New Request to join Package '+packageName;
         var Notificationbody = clientName+ ' is requesting to join '+packageName +' Consulation Package';
         
+        try{
         var response = await notificationService.sendNotification(latestToken,Notificationtitle,Notificationbody,"sortitpro_importance_channel");
+        }catch(error){
+            console.log("UNable to send Notification", latestToken);
+        }
+        
+        
         console.log(response);
         if (!(response)) {
             return res.status(111).json("Error Sending the Notifcation: Debug Info" + response.data.results);
@@ -109,8 +115,11 @@ router.get('/notifyExpertforNewClass?:expertId', async (req: any , res: any ) =>
 
         var Notificationtitle = 'New Request to join the Class '+className;
         var Notificationbody = clientName+ ' is requesting to join '+className +' Classroom';
-        
+        try{
         var response = await notificationService.sendNotification(latestToken,Notificationtitle,Notificationbody,"sortitpro_importance_channel");
+        }catch(error){
+            console.log("UNable to send Notification", latestToken);
+        }
         console.log(response);
         if (!(response)) {
             return res.status(111).json("Error Sending the Notifcation: Debug Info" + response.data.results);

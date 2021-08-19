@@ -9,8 +9,8 @@ router.get('/notifyClientForNewEnrollment?:expertId?:type', async (req: any , re
     try{
         var expertId = req.query.expertId;
         var type = req.query.type; // 0 refers to Class and 1 for Consultation
-        console.log(type);
-        console.log(expertId);
+        console.log("TYPE:",type);
+        console.log("EXPERTID:",expertId);
 
         var pathForAcceptedClient = '/experts/data/uid/'+expertId+'/members/';
         var docName = 'data';
@@ -69,7 +69,12 @@ router.get('/notifyClientForNewEnrollment?:expertId?:type', async (req: any , re
 
         var Notificationtitle = "Request to join Class/Package Approved" ;
         var Notificationbody = "Your Request to join " + (type==='0'?"Class":"Package")+ ' : '+joinedEventName +" is approved";
-        var response = await notificationService.sendNotification(currentToken,Notificationtitle,Notificationbody,"sortit_importance_channel");
+        try{
+            var response = await notificationService.sendNotification(currentToken,Notificationtitle,Notificationbody,"sortit_importance_channel");
+        }
+        catch(error){
+            console.log("UNable to send Notification", currentToken);
+        }
         
         console.log(response);
 
@@ -87,7 +92,7 @@ router.get('/notifyClientWhenClassisLive?:classId', async (req: any , res: any )
 
     try{
         var classId = req.query.classId;
-        console.log(classId);
+        console.log("ClassID:",classId);
 
         var pathForClass = '/classrooms/'+classId+'/members/';
         var docName = 'data';
@@ -112,29 +117,38 @@ router.get('/notifyClientWhenClassisLive?:classId', async (req: any , res: any )
 
         for(let ind =0;ind<n;ind++){
             var member = classData.enrolledMembers[ind];
-            console.log(member);
             clientIdArray.push(member["uid"]);
         }
        
         //Fetch tokenId of each of the client and ens notify to them all
 
+        console.log("CLIENTIDS:",clientIdArray);
+
         for(let ind = 0;ind<n;ind++){
 
-            var clientId = clientIdArray[ind];
+            try{
 
-            var clientPath = '/users/'+clientId+'/user_data/data/private/';
-            var clientDocName = "token";
+                var clientId = clientIdArray[ind];
 
-            var clientDataRef = await db.collection(clientPath).doc(clientDocName).get();
-            var clientData = clientDataRef.data();
+                var clientPath = '/users/'+clientId+'/user_data/data/private/';
+                var clientDocName = "token";
 
-            var deviceTokenArray = clientData.token;
-            var currentDeviceToken = deviceTokenArray[deviceTokenArray.length-1];
+                var clientDataRef = await db.collection(clientPath).doc(clientDocName).get();
+                var clientData = clientDataRef.data();
 
-            var Notificationtitle = "Enrolled Classroom "+ classMetaData.name+ " is Live";
-            var Notificationbody = "Enrolled Class : "+classMetaData.name + " by Expert : "+classMetaData.coachName+ " is currently live" ;
-            var response = await notificationService.sendNotification(currentDeviceToken,Notificationtitle,Notificationbody,"sortit_importance_channel");
-            console.log(response);
+                var deviceTokenArray = clientData.token;
+                var currentDeviceToken = deviceTokenArray[deviceTokenArray.length-1];
+
+                console.log("DEVICE TOKEN:",currentDeviceToken)
+
+                var Notificationtitle = "Enrolled Classroom "+ classMetaData.name+ " is Live";
+                var Notificationbody = "Enrolled Class : "+classMetaData.name + " by Expert : "+classMetaData.coachName+ " is currently live" ;
+    
+                var resp =await notificationService.sendNotification(currentDeviceToken,Notificationtitle,Notificationbody,"sortit_importance_channel");
+                console.log("NOTIFICATION REF:",resp);
+            }catch(error){
+                console.log("UNable to send Notification",currentDeviceToken );
+            }
         }
 
               

@@ -68,8 +68,11 @@ router.get('/notifySuccessfulTransaction?:transactionId', async (req: any , res:
         var Notificationtitle = 'Recieved Payment';
         var Notificationbody = 'You have recieved a payment of Rs. '+ amount + ' from '+ clientName;
         
+        try{
         var response1 = await notificationService.sendNotification(currentExpertToken,Notificationtitle,Notificationbody,"sortitpro_importance_channel");
-        
+        }catch(error){
+            console.log("UNable to send Notification", currentExpertToken);
+        }
         if(!(response1)){
             return res.status(111).json("Unable to send Notification");
         }

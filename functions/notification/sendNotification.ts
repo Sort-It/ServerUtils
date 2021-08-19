@@ -21,7 +21,7 @@ var sendNotification = function(fcmId,title,body,channelID){
 
     return admin.messaging().send(message);    
 };
-// sendNotification('czsJwAMyR5alhtgMNGtk7-:APA91bEdBojCgRtXBGI32e_2cyximOG12E2pjjYualfAKwfgWBeKvIpK-dTkQNKEew5sPrB95oPURIvr3mPakAdXolfbrcW2BRMW0h7U6ZRZHFDk_wg0QZsNv1gwt_WQt7wu4Gu2c4kS'
+// sendNotification('dygKIPxBQpCXxPAopcgEyX:APA91bEtSVoOxSU0MbsGeWbPz9mrikJCP0QsTgqCmX_WsG85my-aOV_qbR62FPgMDyzcxOQqstXmBV8jnXwcbh-Sae8WuymIH3PQI7_AC0nBcLCsUawpsHdO979Vs8sNIOMnCm_oyJzP'
 // , 'Testing 103','This is me testing notification LOL','sortitpro_importance_channel').then(function(resp){
 //     console.log(resp.data);
 // });
