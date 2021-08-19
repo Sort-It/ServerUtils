@@ -17,7 +17,7 @@ router.get('/notifyClientForNewEnrollment?:expertId?:type', async (req: any , re
 
         var clientDataAssociatedtoExpert = await db.collection(pathForAcceptedClient).doc(docName).get();
 
-        if(!(clientDataAssociatedtoExpert)){
+        if(!(clientDataAssociatedtoExpert.exists)){
             return res.status(501).json("Unable to confirm client's association with ExpertId");
         }
 
@@ -56,7 +56,7 @@ router.get('/notifyClientForNewEnrollment?:expertId?:type', async (req: any , re
 
         var clientref = await db.collection(clientCollectionName).doc(clientDocName).get();
 
-        if(!(clientref)){
+        if(!(clientref.exists)){
             return res.status(501).json("Unable to find client's information");
         }
 
@@ -99,7 +99,7 @@ router.get('/notifyClientWhenClassisLive?:classId', async (req: any , res: any )
 
         var classDataRef = await db.collection(pathForClass).doc(docName).get();
 
-        if(!(classDataRef)){
+        if(!(classDataRef.exists)){
             return res.status(501).json("Unable to find the class");
         }
 
