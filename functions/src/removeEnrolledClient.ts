@@ -66,7 +66,8 @@ router.get('/removeClientFromClass?:trainerId?:clientId?:classId', async (req: a
         var trainerId = req.query.trainerId;
         var clientId = req.query.clientId;
         var classId = req.query.classId;
-        console.log(clientId,classId,trainerId);
+        console.log("REMOVE CLIENT FORM CLASS:");
+        console.log("CLIENTID,CLASSID,TRAINERID",clientId,classId,trainerId);
 
         var batch = db.batch();
         // making write operations atomic

@@ -14,7 +14,7 @@ router.get('/notifySuccessfulTransaction?:transactionId', async (req: any , res:
         var collectionName = 'Transactions';
 
         var transactionRef =await db.collection(collectionName).doc(transactionId).get();
-        if(!(transactionRef)){
+        if(!(transactionRef.exists)){
             res.status(501).json("Unable to fetch Transaction Details");
         }
 
@@ -34,7 +34,7 @@ router.get('/notifySuccessfulTransaction?:transactionId', async (req: any , res:
 
         var clientref = await db.collection(clientCollectionName).doc(clientDocName).get();
 
-        if(!(clientref)){
+        if(!(clientref.exists)){
             return res.status(501).json("Unable to find client's information");
         }
 
@@ -69,13 +69,11 @@ router.get('/notifySuccessfulTransaction?:transactionId', async (req: any , res:
         var Notificationbody = 'You have recieved a payment of Rs. '+ amount + ' from '+ clientName;
         
         try{
-        var response1 = await notificationService.sendNotification(currentExpertToken,Notificationtitle,Notificationbody,"sortitpro_importance_channel");
+        await notificationService.sendNotification(currentExpertToken,Notificationtitle,Notificationbody,"sortitpro_importance_channel");
         }catch(error){
             console.log("UNable to send Notification", currentExpertToken);
         }
-        if(!(response1)){
-            return res.status(111).json("Unable to send Notification");
-        }
+
 
         return res.status(200).json("Success");
     }catch (error) { return res.status(501).json(error.message); }

@@ -20,7 +20,7 @@ router.get('/notifyExpertforNewConsultation?:expertId', async (req: any , res: a
 
         //console.log(clientDataAssociatedtoExpert);
 
-        if(!(clientDataAssociatedtoExpert)){
+        if(!(clientDataAssociatedtoExpert.exists)){
             return res.status(501).json("Unable to confirm client's association with ExpertId");
         }
 
@@ -39,7 +39,7 @@ router.get('/notifyExpertforNewConsultation?:expertId', async (req: any , res: a
 
         var tokenDocResponse = await db.collection(pathForExpertToken).doc(docNameforExpertToken).get();
 
-        if(!(tokenDocResponse)){
+        if(!(tokenDocResponse.exists)){
             return res.status(501).json("No token found for the Expert");
         }
 
@@ -59,9 +59,7 @@ router.get('/notifyExpertforNewConsultation?:expertId', async (req: any , res: a
         
         
         console.log(response);
-        if (!(response)) {
-            return res.status(111).json("Error Sending the Notifcation: Debug Info" + response.data.results);
-        }
+
 
         return res.status(200).json("Success");
     }catch (error) { return res.status(501).json(error.message); }
@@ -85,7 +83,7 @@ router.get('/notifyExpertforNewClass?:expertId', async (req: any , res: any ) =>
 
         //console.log(clientDataAssociatedtoExpert);
 
-        if(!(clientDataAssociatedtoExpert)){
+        if(!(clientDataAssociatedtoExpert.exists)){
             return res.status(501).json("Unable to confirm client's association with ExpertId");
         }
 
@@ -104,7 +102,7 @@ router.get('/notifyExpertforNewClass?:expertId', async (req: any , res: any ) =>
 
         var tokenDocResponse = await db.collection(pathForExpertToken).doc(docNameforExpertToken).get();
 
-        if(!(tokenDocResponse)){
+        if(!(tokenDocResponse.exists)){
             return res.status(501).json("No token found for the Expert");
         }
 
@@ -121,10 +119,7 @@ router.get('/notifyExpertforNewClass?:expertId', async (req: any , res: any ) =>
             console.log("UNable to send Notification", latestToken);
         }
         console.log(response);
-        if (!(response)) {
-            return res.status(111).json("Error Sending the Notifcation: Debug Info" + response.data.results);
-        }
-
+        
         return res.status(200).json("Success");
     }catch (error) { return res.status(501).json(error.message); }
 
